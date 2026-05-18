@@ -162,52 +162,50 @@ export default function GuardKPP() {
           </div>
         </div>
 
-        {/* ═══ ACTION BAR ═══ */}
-        <div style={{ padding: "16px 28px", background: T.surface, borderBottom: "2px solid " + T.border, display: "flex", gap: 16, alignItems: "center", flexShrink: 0 }}>
-          <BigBtn color="#FFF" bg={T.green} border={T.green} icon="login" onClick={() => setPanel("entry")}
-                  style={{ flex: 1, maxWidth: 320, boxShadow: "0 4px 16px rgba(27,140,61,0.25)" }}>
-            ВХОД
-          </BigBtn>
-          <BigBtn color="#FFF" bg={T.red} border={T.red} icon="logout" onClick={() => setPanel("exitChoose")}
-                  style={{ flex: 1, maxWidth: 320, boxShadow: "0 4px 16px rgba(192,57,43,0.25)" }}>
-            ВЫХОД
-          </BigBtn>
-          <div style={{ width: 2, height: 48, background: T.border, flexShrink: 0 }} />
-          <BigBtn color={T.blue} bg={T.blueBg} border={T.blueBorder} icon="truck" onClick={() => setPanel("vehicleEntry")}
-                  style={{ flex: 1, maxWidth: 280 }}>
-            ВЪЕЗД ТС
-          </BigBtn>
-        </div>
-
-        {/* ═══ FILTER + SEARCH BAR ═══ */}
-        <div style={{ padding: "14px 28px", display: "flex", gap: 12, alignItems: "center", flexShrink: 0 }}>
+        {/* ═══ TOOLBAR: search + register buttons ═══ */}
+        <div style={{ padding: "14px 28px", background: T.surface, borderBottom: "2px solid " + T.border, display: "flex", gap: 14, alignItems: "center", flexShrink: 0 }}>
+          {/* Search */}
+          <div style={{ display: "flex", alignItems: "center", gap: 10, background: T.bg, border: "2px solid " + T.border, borderRadius: 12, padding: "12px 18px", flex: 1 }}>
+            <I name="search" size={22} color={T.dim} />
+            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Поиск по имени, гос. номеру..." style={{ flex: 1, border: "none", background: "none", fontSize: 18, fontFamily: ff, color: T.text, outline: "none" }} />
+            {search && <button onClick={() => setSearch("")} style={{ background: "none", border: "none", cursor: "pointer", padding: 2 }}><I name="x" size={20} color={T.dim} /></button>}
+          </div>
           {/* Filter pills */}
           {[
-            { id: "all", label: "Все (" + entries.length + ")", color: T.text },
-            { id: "people", label: "Люди (" + peopleCnt + ")", color: T.accent },
-            { id: "vehicles", label: "Транспорт (" + vehicleCnt + ")", color: T.blue },
+            { id: "all", label: "Все " + entries.length, color: T.muted },
+            { id: "people", label: "👤 " + peopleCnt, color: T.orange },
+            { id: "vehicles", label: "🚛 " + vehicleCnt, color: T.blue },
           ].map(f => (
               <button key={f.id} onClick={() => setFilter(f.id)} style={{
-                padding: "12px 24px", borderRadius: 10, fontSize: 16, fontWeight: 700, fontFamily: ff,
+                padding: "12px 20px", borderRadius: 10, fontSize: 17, fontWeight: 700, fontFamily: ff,
                 border: "2px solid " + (filter === f.id ? f.color : T.border),
-                background: filter === f.id ? (f.id === "all" ? T.greyBg : f.color + "12") : T.surface,
-                color: filter === f.id ? f.color : T.muted,
-                cursor: "pointer", transition: "all 0.15s",
+                background: filter === f.id ? f.color + "14" : T.surface,
+                color: filter === f.id ? f.color : T.dim,
+                cursor: "pointer", transition: "all 0.15s", whiteSpace: "nowrap",
               }}>{f.label}</button>
           ))}
-
-          <div style={{ flex: 1 }} />
-
-          {/* Search */}
-          <div style={{ display: "flex", alignItems: "center", gap: 10, background: T.surface, border: "2px solid " + T.border, borderRadius: 12, padding: "10px 18px", width: 340 }}>
-            <I name="search" size={22} color={T.dim} />
-            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Поиск по имени, номеру..." style={{ flex: 1, border: "none", background: "none", fontSize: 17, fontFamily: ff, color: T.text, outline: "none" }} />
-            {search && <button onClick={() => setSearch("")} style={{ background: "none", border: "none", cursor: "pointer", padding: 2 }}><I name="x" size={18} color={T.dim} /></button>}
-          </div>
+          <div style={{ width: 2, height: 44, background: T.border, flexShrink: 0 }} />
+          {/* Register new */}
+          <button onClick={() => setPanel("entry")} style={{
+            display: "flex", alignItems: "center", gap: 10, padding: "12px 24px",
+            borderRadius: 10, border: "2px solid " + T.green, background: T.green,
+            color: "#FFF", fontSize: 17, fontWeight: 700, fontFamily: ff, cursor: "pointer",
+            whiteSpace: "nowrap", boxShadow: "0 2px 8px rgba(27,140,61,0.25)",
+          }}>
+            <I name="plus" size={22} color="#FFF" /> Вход посетителя
+          </button>
+          <button onClick={() => setPanel("vehicleEntry")} style={{
+            display: "flex", alignItems: "center", gap: 10, padding: "12px 24px",
+            borderRadius: 10, border: "2px solid " + T.blue, background: T.blue,
+            color: "#FFF", fontSize: 17, fontWeight: 700, fontFamily: ff, cursor: "pointer",
+            whiteSpace: "nowrap", boxShadow: "0 2px 8px rgba(38,112,179,0.25)",
+          }}>
+            <I name="plus" size={22} color="#FFF" /> Въезд ТС
+          </button>
         </div>
 
         {/* ═══ MAIN LIST ═══ */}
-        <div style={{ flex: 1, overflow: "auto", padding: "0 28px 28px" }}>
+        <div style={{ flex: 1, overflow: "auto", padding: "8px 28px 28px" }}>
           {filtered.length === 0 && (
               <div style={{ textAlign: "center", padding: 60, color: T.dim }}>
                 <I name="search" size={48} color={T.dim} />
@@ -216,67 +214,84 @@ export default function GuardKPP() {
           )}
 
           {filtered.map(e => (
-              <div key={e.id} onClick={() => setPanel({ type: "detail", data: e })} style={{
+              <div key={e.id} style={{
                 background: T.surface, border: "2px solid " + T.border, borderRadius: 16,
-                padding: "18px 24px", marginBottom: 12, cursor: "pointer",
-                display: "flex", alignItems: "center", gap: 18,
+                padding: "16px 20px", marginBottom: 10,
+                display: "flex", alignItems: "center", gap: 16,
                 transition: "all 0.15s",
               }}
-                   onMouseEnter={ev => { ev.currentTarget.style.borderColor = e.type === "person" ? T.accent : T.blue; ev.currentTarget.style.boxShadow = "0 4px 16px rgba(0,0,0,0.06)"; }}
-                   onMouseLeave={ev => { ev.currentTarget.style.borderColor = T.border; ev.currentTarget.style.boxShadow = "none"; }}
+                   onMouseEnter={ev => { ev.currentTarget.style.boxShadow = "0 4px 16px rgba(0,0,0,0.06)"; }}
+                   onMouseLeave={ev => { ev.currentTarget.style.boxShadow = "none"; }}
               >
-                {/* Avatar / Icon */}
+                {/* Icon */}
                 <div style={{
-                  width: 56, height: 56, borderRadius: 14, flexShrink: 0,
+                  width: 52, height: 52, borderRadius: 14, flexShrink: 0,
                   background: e.type === "person" ? T.orangeBg : T.blueBg,
                   border: "2px solid " + (e.type === "person" ? T.orangeBorder : T.blueBorder),
                   display: "flex", alignItems: "center", justifyContent: "center",
                 }}>
-                  <I name={e.type === "person" ? "user" : "truck"} size={28} color={e.type === "person" ? T.orange : T.blue} />
+                  <I name={e.type === "person" ? "user" : "truck"} size={26} color={e.type === "person" ? T.orange : T.blue} />
                 </div>
 
-                {/* Info */}
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 19, fontWeight: 700, color: T.text, marginBottom: 4 }}>{e.name}</div>
+                {/* Info — clickable to view details */}
+                <div onClick={() => setPanel({ type: "detail", data: e })} style={{ flex: 1, minWidth: 0, cursor: "pointer" }}>
+                  <div style={{ fontSize: 18, fontWeight: 700, color: T.text, marginBottom: 3 }}>
+                    {e.name}
+                    {e.type === "person" && e.tmc && e.tmc.length > 0 && (
+                        <span style={{ marginLeft: 10, display: "inline-flex", alignItems: "center", gap: 4, padding: "2px 10px", background: T.orangeBg, border: "1px solid " + T.orangeBorder, borderRadius: 6, fontSize: 12, fontWeight: 600, color: T.orange, verticalAlign: "middle" }}>
+                    <I name="box" size={13} color={T.orange} /> ТМЦ: {e.tmc.length}
+                  </span>
+                    )}
+                  </div>
                   {e.type === "person" ? (
-                      <div style={{ fontSize: 15, color: T.muted }}>
-                        {e.company} • {e.purpose}
-                        {e.tmc && e.tmc.length > 0 && (
-                            <span style={{ marginLeft: 10, display: "inline-flex", alignItems: "center", gap: 4, padding: "2px 10px", background: T.orangeBg, border: "1px solid " + T.orangeBorder, borderRadius: 6, fontSize: 13, fontWeight: 600, color: T.orange }}>
-                      <I name="box" size={14} color={T.orange} /> ТМЦ: {e.tmc.length}
-                    </span>
-                        )}
-                      </div>
+                      <div style={{ fontSize: 14, color: T.muted }}>{e.company} • {e.purpose} • К: {e.host}</div>
                   ) : (
-                      <div style={{ fontSize: 15, color: T.muted }}>
-                        <span style={{ fontFamily: fm, fontWeight: 700, fontSize: 17, color: T.text, letterSpacing: "0.03em" }}>{e.plate}</span>
-                        <span style={{ margin: "0 8px" }}>•</span>{e.vType}
-                        {e.cargoIn && <span style={{ marginLeft: 10, display: "inline-flex", alignItems: "center", gap: 4, padding: "2px 10px", background: T.blueBg, border: "1px solid " + T.blueBorder, borderRadius: 6, fontSize: 13, fontWeight: 600, color: T.blue }}>
-                    <I name="box" size={14} color={T.blue} /> Груз: {e.cargoIn}
-                  </span>}
+                      <div style={{ fontSize: 14, color: T.muted }}>
+                        <span style={{ fontFamily: fm, fontWeight: 700, fontSize: 16, color: T.text }}>{e.plate}</span>
+                        <span style={{ margin: "0 6px" }}>•</span>{e.vType}
+                        {e.cargoIn && <span style={{ margin: "0 6px" }}>•</span>}
+                        {e.cargoIn && <span style={{ fontWeight: 600 }}>Груз: {e.cargoIn}</span>}
                       </div>
                   )}
                 </div>
 
                 {/* Time + badge */}
-                <div style={{ textAlign: "right", flexShrink: 0 }}>
-                  <div style={{ fontSize: 22, fontWeight: 800, fontFamily: fm, color: T.text }}>{e.timeIn}</div>
-                  {e.type === "person" && <div style={{ fontSize: 14, fontWeight: 700, color: T.accent, background: T.orangeBg, padding: "2px 10px", borderRadius: 6, marginTop: 4, display: "inline-block", border: "1px solid " + T.orangeBorder }}>{e.badge}</div>}
-                  {e.type === "vehicle" && <div style={{ fontSize: 13, fontWeight: 600, color: T.blue, marginTop: 4 }}>{e.pass}</div>}
+                <div style={{ textAlign: "center", flexShrink: 0, minWidth: 80 }}>
+                  <div style={{ fontSize: 20, fontWeight: 800, fontFamily: fm, color: T.text }}>{e.timeIn}</div>
+                  {e.type === "person" && <div style={{ fontSize: 13, fontWeight: 700, color: T.accent, background: T.orangeBg, padding: "1px 8px", borderRadius: 5, marginTop: 3, display: "inline-block", border: "1px solid " + T.orangeBorder }}>{e.badge}</div>}
+                  {e.type === "vehicle" && <div style={{ fontSize: 12, fontWeight: 600, color: T.blue, marginTop: 3 }}>{e.pass}</div>}
                 </div>
 
-                {/* Quick exit button */}
-                <button onClick={ev => { ev.stopPropagation(); setPanel({ type: e.type === "person" ? "exitPerson" : "exitVehicle", data: e }); }} style={{
-                  width: 56, height: 56, borderRadius: 14, flexShrink: 0,
-                  background: T.redBg, border: "2px solid " + T.redBorder,
-                  cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-                  transition: "all 0.15s",
-                }}
-                        onMouseEnter={ev => { ev.currentTarget.style.background = T.red; ev.currentTarget.querySelector("svg").setAttribute("stroke", "#FFF"); }}
-                        onMouseLeave={ev => { ev.currentTarget.style.background = T.redBg; ev.currentTarget.querySelector("svg").setAttribute("stroke", T.red); }}
-                >
-                  <I name="logout" size={24} color={T.red} />
-                </button>
+                {/* ══ ВХОД / ВЫХОД buttons ══ */}
+                <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+                  {/* Кнопка ВХОД (для повторной регистрации / нового человека с теми же данными) */}
+                  <button onClick={ev => { ev.stopPropagation(); setPanel(e.type === "person" ? "entry" : "vehicleEntry"); }} style={{
+                    padding: "14px 22px", borderRadius: 12, border: "2px solid " + T.greenBorder,
+                    background: T.greenBg, cursor: "pointer", display: "flex", alignItems: "center", gap: 8,
+                    fontSize: 16, fontWeight: 700, fontFamily: ff, color: T.green,
+                    transition: "all 0.15s",
+                  }}
+                          onMouseEnter={ev => { ev.currentTarget.style.background = T.green; ev.currentTarget.style.color = "#FFF"; ev.currentTarget.style.borderColor = T.green; }}
+                          onMouseLeave={ev => { ev.currentTarget.style.background = T.greenBg; ev.currentTarget.style.color = T.green; ev.currentTarget.style.borderColor = T.greenBorder; }}
+                  >
+                    <I name="login" size={20} color={T.green} />
+                    ВХОД
+                  </button>
+
+                  {/* Кнопка ВЫХОД */}
+                  <button onClick={ev => { ev.stopPropagation(); setPanel({ type: e.type === "person" ? "exitPerson" : "exitVehicle", data: e }); }} style={{
+                    padding: "14px 22px", borderRadius: 12, border: "2px solid " + T.redBorder,
+                    background: T.redBg, cursor: "pointer", display: "flex", alignItems: "center", gap: 8,
+                    fontSize: 16, fontWeight: 700, fontFamily: ff, color: T.red,
+                    transition: "all 0.15s",
+                  }}
+                          onMouseEnter={ev => { ev.currentTarget.style.background = T.red; ev.currentTarget.style.color = "#FFF"; ev.currentTarget.style.borderColor = T.red; }}
+                          onMouseLeave={ev => { ev.currentTarget.style.background = T.redBg; ev.currentTarget.style.color = T.red; ev.currentTarget.style.borderColor = T.redBorder; }}
+                  >
+                    <I name="logout" size={20} color={T.red} />
+                    ВЫХОД
+                  </button>
+                </div>
               </div>
           ))}
         </div>
@@ -381,184 +396,153 @@ export default function GuardKPP() {
             </Panel>
         )}
 
-        {/* ── EXIT choose who ── */}
-        {panel === "exitChoose" && (
-            <Panel title="🚪 Регистрация выхода — выберите" onClose={() => setPanel(null)}>
-              <div style={{ maxWidth: 700, margin: "0 auto" }}>
-                <div style={{ fontSize: 18, color: T.muted, marginBottom: 20 }}>Нажмите на человека или транспорт для регистрации выхода:</div>
-                {entries.map(e => (
-                    <div key={e.id} onClick={() => setPanel({ type: e.type === "person" ? "exitPerson" : "exitVehicle", data: e })} style={{
-                      background: T.surface, border: "2px solid " + T.border, borderRadius: 14,
-                      padding: "18px 22px", marginBottom: 12, cursor: "pointer",
-                      display: "flex", alignItems: "center", gap: 16, transition: "all 0.15s",
-                    }}
-                         onMouseEnter={ev => ev.currentTarget.style.borderColor = T.red}
-                         onMouseLeave={ev => ev.currentTarget.style.borderColor = T.border}
-                    >
-                      <div style={{ width: 48, height: 48, borderRadius: 12, background: e.type === "person" ? T.orangeBg : T.blueBg, border: "2px solid " + (e.type === "person" ? T.orangeBorder : T.blueBorder), display: "flex", alignItems: "center", justifyContent: "center" }}>
-                        <I name={e.type === "person" ? "user" : "truck"} size={24} color={e.type === "person" ? T.orange : T.blue} />
-                      </div>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: 18, fontWeight: 700, color: T.text }}>{e.name}</div>
-                        <div style={{ fontSize: 15, color: T.muted }}>{e.type === "person" ? e.company : e.plate + " • " + e.vType}</div>
-                      </div>
-                      <div style={{ fontSize: 17, fontFamily: fm, fontWeight: 700, color: T.muted }}>с {e.timeIn}</div>
-                      <div style={{ width: 48, height: 48, borderRadius: 12, background: T.redBg, border: "2px solid " + T.redBorder, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                        <I name="logout" size={22} color={T.red} />
-                      </div>
-                    </div>
-                ))}
+        {/* ── EXIT person ── */}
+        {panel?.type === "exitPerson" && (
+            <Panel title={"🚪 Выход — " + panel.data.name} onClose={() => setPanel(null)}>
+              <div style={{ maxWidth: 600, margin: "0 auto" }}>
+                <div style={{ background: T.surface, border: "2px solid " + T.border, borderRadius: 14, padding: 24, marginBottom: 20 }}>
+                  <Field big label="ФИО" value={panel.data.name} />
+                  <Field label="Организация" value={panel.data.company} />
+                  <Field label="Время входа" value={panel.data.timeIn} />
+                  <Field label="Бейдж" value={panel.data.badge} />
+                </div>
+
+                {/* TMC check */}
+                <div style={{ background: T.orangeBg, border: "2px solid " + T.orangeBorder, borderRadius: 14, padding: 20, marginBottom: 20 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+                    <I name="box" size={22} color={T.orange} />
+                    <span style={{ fontSize: 18, fontWeight: 700, color: T.orange }}>Проверка ТМЦ при выходе</span>
+                  </div>
+                  {panel.data.tmc && panel.data.tmc.length > 0 ? (
+                      panel.data.tmc.map((item, i) => (
+                          <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", background: "#FFF", borderRadius: 10, marginBottom: 8, border: "1px solid " + T.orangeBorder }}>
+                            <I name="box" size={20} color={T.orange} />
+                            <span style={{ flex: 1, fontSize: 17, fontWeight: 600, color: T.text }}>{item}</span>
+                            <span style={{ fontSize: 15, fontWeight: 700, color: T.green }}>✓ На месте</span>
+                          </div>
+                      ))
+                  ) : (
+                      <div style={{ fontSize: 16, color: T.muted }}>ТМЦ не регистрировались при входе</div>
+                  )}
+                </div>
+
+                <Inp label="Примечания при выходе" textarea placeholder="Дополнительная информация..." value="" onChange={() => {}} />
+
+                <BigBtn color="#FFF" bg={T.red} border={T.red} icon="logout" onClick={() => { setPanel(null); showToast("✅ Выход " + panel.data.name + " зарегистрирован. Бейдж " + panel.data.badge + " сдан."); }}>
+                  ЗАРЕГИСТРИРОВАТЬ ВЫХОД
+                </BigBtn>
               </div>
             </Panel>
         )}
 
-        {/* ── EXIT person ── */}
-        {panel?.type === "exitPerson" && (
-            <Panel title="🚪 Выход — " + panel.data.name onClose={() => setPanel(null)}>
-          <div style={{ maxWidth: 600, margin: "0 auto" }}>
-          <div style={{ background: T.surface, border: "2px solid " + T.border, borderRadius: 14, padding: 24, marginBottom: 20 }}>
-          <Field big label="ФИО" value={panel.data.name} />
-          <Field label="Организация" value={panel.data.company} />
-  <Field label="Время входа" value={panel.data.timeIn} />
-  <Field label="Бейдж" value={panel.data.badge} />
-</div>
-
-  {/* TMC check */}
-  <div style={{ background: T.orangeBg, border: "2px solid " + T.orangeBorder, borderRadius: 14, padding: 20, marginBottom: 20 }}>
-    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
-      <I name="box" size={22} color={T.orange} />
-      <span style={{ fontSize: 18, fontWeight: 700, color: T.orange }}>Проверка ТМЦ при выходе</span>
-    </div>
-    {panel.data.tmc && panel.data.tmc.length > 0 ? (
-        panel.data.tmc.map((item, i) => (
-            <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", background: "#FFF", borderRadius: 10, marginBottom: 8, border: "1px solid " + T.orangeBorder }}>
-              <I name="box" size={20} color={T.orange} />
-              <span style={{ flex: 1, fontSize: 17, fontWeight: 600, color: T.text }}>{item}</span>
-              <span style={{ fontSize: 15, fontWeight: 700, color: T.green }}>✓ На месте</span>
-            </div>
-        ))
-    ) : (
-        <div style={{ fontSize: 16, color: T.muted }}>ТМЦ не регистрировались при входе</div>
-    )}
-  </div>
-
-  <Inp label="Примечания при выходе" textarea placeholder="Дополнительная информация..." value="" onChange={() => {}} />
-
-  <BigBtn color="#FFF" bg={T.red} border={T.red} icon="logout" onClick={() => { setPanel(null); showToast("✅ Выход " + panel.data.name + " зарегистрирован. Бейдж " + panel.data.badge + " сдан."); }}>
-    ЗАРЕГИСТРИРОВАТЬ ВЫХОД
-  </BigBtn>
-</div>
-</Panel>
-)}
-
-{/* ── EXIT vehicle ── */}
-{panel?.type === "exitVehicle" && (
-    <Panel title={"🚛 Выезд — " + panel.data.plate} onClose={() => setPanel(null)}>
-      <div style={{ maxWidth: 600, margin: "0 auto" }}>
-        <div style={{ background: T.surface, border: "2px solid " + T.border, borderRadius: 14, padding: 24, marginBottom: 20 }}>
-          <Field big label="Гос. номер" value={panel.data.plate} />
-          <Field label="Тип ТС" value={panel.data.vType} />
-          <Field label="Водитель" value={panel.data.name} />
-          <Field label="Время въезда" value={panel.data.timeIn} />
-          {panel.data.cargoIn && <Field label="Груз при въезде" value={panel.data.cargoIn} />}
-        </div>
-
-        {/* Cargo out */}
-        <div style={{ background: T.blueBg, border: "2px solid " + T.blueBorder, borderRadius: 14, padding: 20, marginBottom: 20 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
-            <I name="box" size={22} color={T.blue} />
-            <span style={{ fontSize: 18, fontWeight: 700, color: T.blue }}>Груз при выезде</span>
-          </div>
-          <Inp label="Описание груза" textarea placeholder="Что вывозит? (пустой, руда 20т, отходы...)" value="" onChange={() => {}} />
-          <Inp label="ТТН / накладная" placeholder="ТТН-2026-0548" value="" onChange={() => {}} />
-        </div>
-
-        <div style={{ marginBottom: 20 }}>
-          <div style={{ fontSize: 14, color: T.muted, fontWeight: 600, textTransform: "uppercase", marginBottom: 10 }}>Досмотр при выезде</div>
-          <div style={{ display: "flex", gap: 14 }}>
-            <button style={{ flex: 1, padding: 18, borderRadius: 14, border: "3px solid " + T.greenBorder, background: T.greenBg, cursor: "pointer", fontSize: 18, fontWeight: 700, color: T.green, fontFamily: ff, display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}>
-              <I name="check" size={24} color={T.green} /> Без нарушений
-            </button>
-            <button style={{ flex: 1, padding: 18, borderRadius: 14, border: "3px solid " + T.redBorder, background: T.redBg, cursor: "pointer", fontSize: 18, fontWeight: 700, color: T.red, fontFamily: ff, display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}>
-              <I name="alert" size={24} color={T.red} /> Нарушение
-            </button>
-          </div>
-        </div>
-
-        <BigBtn color="#FFF" bg={T.red} border={T.red} icon="logout" onClick={() => { setPanel(null); showToast("✅ Выезд " + panel.data.plate + " зарегистрирован"); }}>
-          ЗАРЕГИСТРИРОВАТЬ ВЫЕЗД
-        </BigBtn>
-      </div>
-    </Panel>
-)}
-
-{/* ── DETAIL (click on row) ── */}
-{panel?.type === "detail" && (
-    <Panel title={panel.data.type === "person" ? "👤 " + panel.data.name : "🚛 " + panel.data.plate} onClose={() => setPanel(null)}>
-      <div style={{ maxWidth: 600, margin: "0 auto" }}>
-        {panel.data.type === "person" ? (<>
-          <div style={{ background: T.surface, border: "2px solid " + T.border, borderRadius: 14, padding: 24, marginBottom: 20 }}>
-            <Field big label="ФИО" value={panel.data.name} />
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-              <Field label="ИИН" value={panel.data.iin} />
-              <Field label="Документ" value={panel.data.doc} />
-              <Field label="Организация" value={panel.data.company} />
-              <Field label="Цель визита" value={panel.data.purpose} />
-              <Field label="К кому" value={panel.data.host} />
-              <Field label="Бейдж" value={panel.data.badge} />
-              <Field label="Время входа" value={panel.data.timeIn} />
-              <Field label="СИЗ" value={panel.data.siz} />
-            </div>
-          </div>
-          {panel.data.tmc && panel.data.tmc.length > 0 && (
-              <div style={{ background: T.orangeBg, border: "2px solid " + T.orangeBorder, borderRadius: 14, padding: 20, marginBottom: 20 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
-                  <I name="box" size={22} color={T.orange} />
-                  <span style={{ fontSize: 18, fontWeight: 700, color: T.orange }}>ТМЦ при входе ({panel.data.tmc.length})</span>
+        {/* ── EXIT vehicle ── */}
+        {panel?.type === "exitVehicle" && (
+            <Panel title={"🚛 Выезд — " + panel.data.plate} onClose={() => setPanel(null)}>
+              <div style={{ maxWidth: 600, margin: "0 auto" }}>
+                <div style={{ background: T.surface, border: "2px solid " + T.border, borderRadius: 14, padding: 24, marginBottom: 20 }}>
+                  <Field big label="Гос. номер" value={panel.data.plate} />
+                  <Field label="Тип ТС" value={panel.data.vType} />
+                  <Field label="Водитель" value={panel.data.name} />
+                  <Field label="Время въезда" value={panel.data.timeIn} />
+                  {panel.data.cargoIn && <Field label="Груз при въезде" value={panel.data.cargoIn} />}
                 </div>
-                {panel.data.tmc.map((item, i) => (
-                    <div key={i} style={{ padding: "12px 16px", background: "#FFF", borderRadius: 10, marginBottom: 6, fontSize: 17, fontWeight: 600, color: T.text, border: "1px solid " + T.orangeBorder }}>
-                      {i + 1}. {item}
-                    </div>
-                ))}
+
+                {/* Cargo out */}
+                <div style={{ background: T.blueBg, border: "2px solid " + T.blueBorder, borderRadius: 14, padding: 20, marginBottom: 20 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+                    <I name="box" size={22} color={T.blue} />
+                    <span style={{ fontSize: 18, fontWeight: 700, color: T.blue }}>Груз при выезде</span>
+                  </div>
+                  <Inp label="Описание груза" textarea placeholder="Что вывозит? (пустой, руда 20т, отходы...)" value="" onChange={() => {}} />
+                  <Inp label="ТТН / накладная" placeholder="ТТН-2026-0548" value="" onChange={() => {}} />
+                </div>
+
+                <div style={{ marginBottom: 20 }}>
+                  <div style={{ fontSize: 14, color: T.muted, fontWeight: 600, textTransform: "uppercase", marginBottom: 10 }}>Досмотр при выезде</div>
+                  <div style={{ display: "flex", gap: 14 }}>
+                    <button style={{ flex: 1, padding: 18, borderRadius: 14, border: "3px solid " + T.greenBorder, background: T.greenBg, cursor: "pointer", fontSize: 18, fontWeight: 700, color: T.green, fontFamily: ff, display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}>
+                      <I name="check" size={24} color={T.green} /> Без нарушений
+                    </button>
+                    <button style={{ flex: 1, padding: 18, borderRadius: 14, border: "3px solid " + T.redBorder, background: T.redBg, cursor: "pointer", fontSize: 18, fontWeight: 700, color: T.red, fontFamily: ff, display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}>
+                      <I name="alert" size={24} color={T.red} /> Нарушение
+                    </button>
+                  </div>
+                </div>
+
+                <BigBtn color="#FFF" bg={T.red} border={T.red} icon="logout" onClick={() => { setPanel(null); showToast("✅ Выезд " + panel.data.plate + " зарегистрирован"); }}>
+                  ЗАРЕГИСТРИРОВАТЬ ВЫЕЗД
+                </BigBtn>
               </div>
-          )}
-        </>) : (<>
-          <div style={{ background: T.surface, border: "2px solid " + T.border, borderRadius: 14, padding: 24, marginBottom: 20 }}>
-            <Field big label="Гос. номер" value={panel.data.plate} />
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-              <Field label="Тип ТС" value={panel.data.vType} />
-              <Field label="Водитель" value={panel.data.name} />
-              <Field label="Время въезда" value={panel.data.timeIn} />
-              <Field label="Пропуск" value={panel.data.pass} />
-              <Field label="Цель" value={panel.data.purpose} />
-              {panel.data.cargoIn && <Field label="Груз при въезде" value={panel.data.cargoIn} />}
+            </Panel>
+        )}
+
+        {/* ── DETAIL (click on row) ── */}
+        {panel?.type === "detail" && (
+            <Panel title={panel.data.type === "person" ? "👤 " + panel.data.name : "🚛 " + panel.data.plate} onClose={() => setPanel(null)}>
+              <div style={{ maxWidth: 600, margin: "0 auto" }}>
+                {panel.data.type === "person" ? (<>
+                  <div style={{ background: T.surface, border: "2px solid " + T.border, borderRadius: 14, padding: 24, marginBottom: 20 }}>
+                    <Field big label="ФИО" value={panel.data.name} />
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                      <Field label="ИИН" value={panel.data.iin} />
+                      <Field label="Документ" value={panel.data.doc} />
+                      <Field label="Организация" value={panel.data.company} />
+                      <Field label="Цель визита" value={panel.data.purpose} />
+                      <Field label="К кому" value={panel.data.host} />
+                      <Field label="Бейдж" value={panel.data.badge} />
+                      <Field label="Время входа" value={panel.data.timeIn} />
+                      <Field label="СИЗ" value={panel.data.siz} />
+                    </div>
+                  </div>
+                  {panel.data.tmc && panel.data.tmc.length > 0 && (
+                      <div style={{ background: T.orangeBg, border: "2px solid " + T.orangeBorder, borderRadius: 14, padding: 20, marginBottom: 20 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+                          <I name="box" size={22} color={T.orange} />
+                          <span style={{ fontSize: 18, fontWeight: 700, color: T.orange }}>ТМЦ при входе ({panel.data.tmc.length})</span>
+                        </div>
+                        {panel.data.tmc.map((item, i) => (
+                            <div key={i} style={{ padding: "12px 16px", background: "#FFF", borderRadius: 10, marginBottom: 6, fontSize: 17, fontWeight: 600, color: T.text, border: "1px solid " + T.orangeBorder }}>
+                              {i + 1}. {item}
+                            </div>
+                        ))}
+                      </div>
+                  )}
+                </>) : (<>
+                  <div style={{ background: T.surface, border: "2px solid " + T.border, borderRadius: 14, padding: 24, marginBottom: 20 }}>
+                    <Field big label="Гос. номер" value={panel.data.plate} />
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                      <Field label="Тип ТС" value={panel.data.vType} />
+                      <Field label="Водитель" value={panel.data.name} />
+                      <Field label="Время въезда" value={panel.data.timeIn} />
+                      <Field label="Пропуск" value={panel.data.pass} />
+                      <Field label="Цель" value={panel.data.purpose} />
+                      {panel.data.cargoIn && <Field label="Груз при въезде" value={panel.data.cargoIn} />}
+                    </div>
+                  </div>
+                </>)}
+
+                <BigBtn color="#FFF" bg={T.red} border={T.red} icon="logout"
+                        onClick={() => setPanel({ type: panel.data.type === "person" ? "exitPerson" : "exitVehicle", data: panel.data })}>
+                  ЗАРЕГИСТРИРОВАТЬ ВЫХОД
+                </BigBtn>
+              </div>
+            </Panel>
+        )}
+
+        {/* ═══ TOAST ═══ */}
+        {toast && (
+            <div style={{
+              position: "fixed", bottom: 30, left: "50%", transform: "translateX(-50%)", zIndex: 3000,
+              background: toast.type === "danger" ? T.redBg : T.greenBg,
+              border: "3px solid " + (toast.type === "danger" ? T.redBorder : T.greenBorder),
+              borderRadius: 16, padding: "20px 36px",
+              fontSize: 20, fontWeight: 700, color: toast.type === "danger" ? T.red : T.green,
+              fontFamily: ff, boxShadow: "0 8px 32px rgba(0,0,0,0.15)",
+              animation: "fadeIn 0.3s ease", textAlign: "center", maxWidth: 600,
+            }}>
+              {toast.msg}
             </div>
-          </div>
-        </>)}
-
-        <BigBtn color="#FFF" bg={T.red} border={T.red} icon="logout"
-                onClick={() => setPanel({ type: panel.data.type === "person" ? "exitPerson" : "exitVehicle", data: panel.data })}>
-          ЗАРЕГИСТРИРОВАТЬ ВЫХОД
-        </BigBtn>
+        )}
       </div>
-    </Panel>
-)}
-
-{/* ═══ TOAST ═══ */}
-{toast && (
-    <div style={{
-      position: "fixed", bottom: 30, left: "50%", transform: "translateX(-50%)", zIndex: 3000,
-      background: toast.type === "danger" ? T.redBg : T.greenBg,
-      border: "3px solid " + (toast.type === "danger" ? T.redBorder : T.greenBorder),
-      borderRadius: 16, padding: "20px 36px",
-      fontSize: 20, fontWeight: 700, color: toast.type === "danger" ? T.red : T.green,
-      fontFamily: ff, boxShadow: "0 8px 32px rgba(0,0,0,0.15)",
-      animation: "fadeIn 0.3s ease", textAlign: "center", maxWidth: 600,
-    }}>
-      {toast.msg}
-    </div>
-)}
-</div>
-);
+  );
 }
